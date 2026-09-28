@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050816">
+<title>Download – Emoji Cipher</title>
+<style>
+:root{--bg:#f5f3fb;--bg2:#ece7fa;--ink:#17122e;--mute:#645d80;--card:rgba(255,255,255,.85);--line:#dcd5f0;--acc:#ff9f1c;--acc2:#ff5d8f;--field:#fbfaff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0a22;--bg2:#1a1240;--ink:#f3efff;--mute:#a59dc6;--card:rgba(30,22,66,.75);--line:#372c68;--field:#150f31}}
+:root[data-theme="dark"]{--bg:#0e0a22;--bg2:#1a1240;--ink:#f3efff;--mute:#a59dc6;--card:rgba(30,22,66,.75);--line:#372c68;--field:#150f31}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.6 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+background:radial-gradient(900px 500px at 85% -10%,color-mix(in srgb,var(--acc2) 22%,transparent),transparent),radial-gradient(800px 500px at 0% 0%,color-mix(in srgb,var(--acc) 20%,transparent),transparent),linear-gradient(180deg,var(--bg),var(--bg2));background-color:var(--bg)}
+.wrap{max-width:560px;margin:0 auto;padding:20px 18px 40px}
+.back{display:inline-flex;align-items:center;gap:6px;color:var(--mute);text-decoration:none;font-weight:700;font-size:14px;margin-bottom:18px}
+.back:hover{color:var(--ink)}
+.icon{width:96px;height:96px;border-radius:24px;display:block;margin:6px auto 16px;box-shadow:0 16px 34px -14px rgba(0,0,0,.4)}
+h1{text-align:center;font-size:clamp(24px,6vw,30px);margin:0 0 4px;letter-spacing:-.02em}
+.ver{text-align:center;color:var(--mute);font-size:14px;margin:0 0 24px}
+.card{background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,var(--acc),var(--acc2),#7c5cff) border-box;border:1.5px solid transparent;border-radius:24px;padding:22px 20px;text-align:center}
+.btn{display:inline-flex;align-items:center;gap:8px;text-decoration:none;font-weight:800;font-size:17px;color:#fff;background:linear-gradient(90deg,var(--acc),var(--acc2));padding:15px 28px;border-radius:16px;box-shadow:0 10px 24px -10px var(--acc2);transition:.15s}
+.btn:active{transform:translateY(3px);box-shadow:0 4px 10px -4px var(--acc2)}
+.size{margin:12px 0 0;color:var(--mute);font-size:13px}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:22px 0}
+.fact{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px}
+.fact b{display:block;font-size:14px;margin-bottom:3px}
+.fact span{color:var(--mute);font-size:13px}
+.steps{list-style:none;margin:0;padding:0;counter-reset:s}
+.steps li{counter-increment:s;display:flex;gap:12px;padding:12px 0;border-top:1px solid var(--line)}
+.steps li:first-child{border-top:0}
+.steps li::before{content:counter(s);flex:0 0 26px;height:26px;border-radius:50%;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;font-weight:800;font-size:13px;display:flex;align-items:center;justify-content:center}
+h2{font-size:16px;margin:30px 0 4px}
+.note{color:var(--mute);font-size:13px;text-align:center;margin-top:26px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="index.html">← Back to app</a>
+  <img class="icon" src="icon-192.png" alt="Emoji Cipher logo">
+  <h1>Emoji Cipher</h1>
+  <p class="ver">Android app · works fully offline</p>
+
+  <div class="card">
+    <a class="btn" href="emoji-secret.apk" download>⬇ Download APK</a>
+    <p class="size">~6 MB · Android 6.0 and up</p>
+  </div>
+
+  <div class="facts">
+    <div class="fact"><b>📴 Offline</b><span>No internet needed after install</span></div>
+    <div class="fact"><b>🔒 Private</b><span>Nothing leaves your phone</span></div>
+    <div class="fact"><b>🪶 Lightweight</b><span>No background data use</span></div>
+    <div class="fact"><b>🆓 Free</b><span>No account, no ads</span></div>
+  </div>
+
+  <h2>How to install</h2>
+  <ol class="steps">
+    <li>Tap <b>Download APK</b> above.</li>
+    <li>Open the downloaded file from your notifications or Files app.</li>
+    <li>If asked, allow <b>Install from unknown sources</b> for your browser.</li>
+    <li>Tap <b>Install</b>, then open the app.</li>
+  </ol>
+
+  <p class="note">Developed by @Ashwin Verma</p>
+</div>
+</body>
+</html>

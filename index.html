@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050816">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<title>Emoji Cipher – Hide messages inside emojis</title>
+<style>
+:root{--bg:#f5f3fb;--bg2:#ece7fa;--ink:#17122e;--mute:#645d80;--card:rgba(255,255,255,.85);--line:#dcd5f0;--acc:#ff9f1c;--acc2:#ff5d8f;--accink:#2a1500;--field:#fbfaff;--shadow:0 20px 50px -20px rgba(60,30,120,.35);
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0e0a22;--bg2:#1a1240;--ink:#f3efff;--mute:#a59dc6;--card:rgba(30,22,66,.75);--line:#372c68;--accink:#2a1500;--field:#150f31;--shadow:0 20px 60px -20px rgba(0,0,0,.7)}}
+:root[data-theme="dark"]{--bg:#0e0a22;--bg2:#1a1240;--ink:#f3efff;--mute:#a59dc6;--card:rgba(30,22,66,.75);--line:#372c68;--accink:#2a1500;--field:#150f31;--shadow:0 20px 60px -20px rgba(0,0,0,.7)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;min-height:100vh;color:var(--ink);font:16px/1.6 "Plus Jakarta Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+background:radial-gradient(900px 500px at 85% -10%,color-mix(in srgb,var(--acc2) 22%,transparent),transparent),radial-gradient(800px 500px at 0% 0%,color-mix(in srgb,var(--acc) 20%,transparent),transparent),linear-gradient(180deg,var(--bg),var(--bg2));background-color:var(--bg)}
+.wrap{max-width:760px;margin:0 auto;padding:40px 18px 24px}
+.badge{display:inline-flex;align-items:center;gap:8px;font-size:13px;font-weight:600;color:var(--mute);border:1px solid var(--line);background:var(--card);padding:6px 12px;border-radius:999px}
+.dot{width:8px;height:8px;border-radius:50%;background:#2fd08a}
+.hero{text-align:center;padding:28px 0 26px}
+.orb{font-size:84px;line-height:1;margin:6px 0 10px;filter:drop-shadow(0 12px 24px rgba(255,140,60,.35));animation:float 4s ease-in-out infinite}
+@keyframes float{50%{transform:translateY(-8px)}}
+h1{font-size:clamp(32px,8vw,52px);line-height:1.05;letter-spacing:-.03em;margin:8px 0 12px;font-weight:800}
+.grad{background:linear-gradient(90deg,var(--acc),var(--acc2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.by{color:var(--mute);font-weight:600;margin:0}.lead{color:var(--mute);max-width:54ch;margin:0 auto;font-size:17px}
+.card{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:8px}
+.tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px}
+.tabs button{border:0;background:none;color:var(--mute);font:inherit;font-weight:700;padding:13px;border-radius:16px;cursor:pointer;transition:.2s}
+.tabs button[aria-selected=true]{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 8px 20px -8px var(--acc2)}
+.panel{padding:18px 16px 18px}
+.panel[hidden]{display:none}
+.lbl{display:flex;justify-content:space-between;align-items:baseline;font-weight:700;font-size:14px;margin:0 0 8px}
+.lbl small{color:var(--mute);font-weight:500}
+.emojis{display:grid;grid-template-columns:repeat(auto-fill,minmax(46px,1fr));gap:8px;margin-bottom:18px}
+.emojis button{font-size:24px;height:48px;border-radius:14px;border:1.5px solid var(--line);background:var(--field);cursor:pointer;transition:.15s}
+.emojis button:hover{transform:translateY(-2px)}
+.emojis button[aria-pressed=true]{border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 30%,transparent)}
+textarea{width:100%;min-height:120px;resize:vertical;background:var(--field);color:var(--ink);border:1.5px solid var(--line);border-radius:14px;padding:14px;font:inherit}
+textarea::placeholder{color:var(--mute);opacity:.8}
+textarea:focus{outline:none;border-color:var(--acc);box-shadow:0 0 0 3px color-mix(in srgb,var(--acc) 25%,transparent)}
+button:focus-visible{outline:3px solid var(--acc);outline-offset:2px}
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+.btn{border:0;font:inherit;font-weight:700;padding:13px 22px;border-radius:14px;cursor:pointer;background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 10px 24px -10px var(--acc2);transition:.15s}
+.btn:hover{transform:translateY(-1px)}
+.btn.ghost{background:none;color:var(--ink);border:1.5px solid var(--line);box-shadow:none}
+.out{margin-top:18px;padding:18px;border-radius:16px;background:var(--field);border:1.5px dashed var(--line)}
+.out[hidden]{display:none}
+.big{font-size:56px;line-height:1.15;word-break:break-all}
+.msg{font-size:19px;white-space:pre-wrap;word-break:break-word}
+.meta{color:var(--mute);font-size:14px;margin:8px 0 0}
+.err{color:#e0365f;font-weight:700}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;margin:26px 0 0}
+.step{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:16px}
+.step b{display:block;margin-bottom:4px}
+.step span{color:var(--mute);font-size:14px}
+.note{color:var(--mute);font-size:13px;text-align:center;margin:22px auto 0;max-width:60ch}
+footer{margin-top:34px;padding-top:22px;border-top:1px solid var(--line);text-align:center}
+footer p{margin:0 0 12px;font-weight:600}
+.social{display:flex;justify-content:center;gap:10px;flex-wrap:wrap}
+.social a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:var(--ink);background:var(--card);border:1px solid var(--line);padding:10px 16px;border-radius:999px;font-weight:600;font-size:14px;transition:.15s}
+.social a:hover{transform:translateY(-2px);border-color:var(--acc)}
+.social svg{width:18px;height:18px;fill:currentColor}
+.toast{position:fixed;left:50%;bottom:calc(22px + env(safe-area-inset-bottom,0px));transform:translate(-50%,20px);background:var(--ink);color:var(--bg);padding:11px 20px;border-radius:999px;font-weight:600;opacity:0;transition:.25s;pointer-events:none;z-index:9}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+.hero{perspective:900px}
+.orb{transform-style:preserve-3d;animation:spin3d 7s ease-in-out infinite;text-shadow:1px 1px 0 #d98a1c,2px 2px 0 #c97d16,3px 3px 0 #b86f10,4px 4px 0 #a8620b,5px 5px 0 #985607,6px 12px 22px rgba(0,0,0,.35);filter:none;display:inline-block}
+@keyframes spin3d{0%,100%{transform:rotateY(-28deg) rotateX(8deg) translateY(0)}50%{transform:rotateY(28deg) rotateX(-6deg) translateY(-10px)}}
+.orb.pop{animation:popin .5s cubic-bezier(.2,1.6,.4,1),spin3d 7s ease-in-out .5s infinite}
+@keyframes popin{from{transform:scale(.3) rotateY(180deg);opacity:0}to{transform:scale(1) rotateY(0);opacity:1}}
+.wrap{position:relative;z-index:1}
+.bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none;perspective:700px}
+.bg span{position:absolute;bottom:-60px;opacity:.28;animation:rise linear infinite;text-shadow:0 8px 14px rgba(0,0,0,.25)}
+@keyframes rise{from{transform:translateY(0) translateZ(0) rotateY(0) rotateZ(-10deg)}to{transform:translateY(-115vh) translateZ(120px) rotateY(360deg) rotateZ(14deg)}}
+.card{transform-style:preserve-3d;transition:transform .25s ease-out,box-shadow .25s;will-change:transform}
+.card.tilt{transition:transform .05s linear}
+.panel:not([hidden]){animation:flip .45s cubic-bezier(.2,.9,.3,1)}
+@keyframes flip{from{opacity:0;transform:perspective(900px) rotateX(-14deg) translateY(10px)}to{opacity:1;transform:none}}
+.emojis{max-height:212px;overflow-y:auto;padding:6px 4px 10px;scrollbar-width:thin}
+.emojis button{box-shadow:0 4px 0 var(--line);transition:transform .15s,box-shadow .15s}
+.emojis button:hover{transform:translateY(-3px) scale(1.12) rotate(-4deg);box-shadow:0 8px 0 var(--line)}
+.emojis button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
+.emojis button[aria-pressed=true]{transform:translateY(2px) scale(1.05);box-shadow:0 1px 0 var(--line),0 0 0 3px color-mix(in srgb,var(--acc) 35%,transparent)}
+.btn{box-shadow:0 6px 0 #c23a68,0 14px 24px -8px var(--acc2);transition:transform .12s,box-shadow .12s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 #c23a68,0 18px 28px -8px var(--acc2)}
+.btn:active{transform:translateY(5px);box-shadow:0 1px 0 #c23a68,0 4px 10px -4px var(--acc2)}
+.btn.ghost{box-shadow:0 4px 0 var(--line)}
+.btn.ghost:active{box-shadow:0 0 0 var(--line)}
+.tabs button[aria-selected=true]{transform:translateZ(20px)}
+.out:not([hidden]){animation:flip .5s cubic-bezier(.2,.9,.3,1)}
+.big{display:inline-block;animation:bob 3s ease-in-out infinite;text-shadow:2px 2px 0 #d98a1c,4px 4px 0 #b86f10,6px 10px 16px rgba(0,0,0,.3)}
+@keyframes bob{50%{transform:rotateY(18deg) translateY(-4px)}}
+
+/* polish pass */
+.wrap{padding-top:32px}
+.hero{padding:10px 0 22px}
+.hero::before{content:"";position:absolute;left:50%;top:70px;width:220px;height:220px;transform:translateX(-50%);border-radius:50%;background:radial-gradient(circle,color-mix(in srgb,var(--acc) 45%,transparent),transparent 68%);filter:blur(10px);z-index:-1}
+.hero{position:relative}
+.orb{font-size:76px;text-shadow:1px 1px 0 #e39a2a,2px 2px 0 #d68b1f,3px 3px 0 #c87d17,4px 8px 16px rgba(0,0,0,.28)}
+h1{font-size:clamp(30px,7.5vw,46px);margin:4px 0 8px}
+.by{font-size:14px;letter-spacing:.02em}
+.bg span{opacity:.16}
+.card{padding:0;border:0;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,var(--acc),var(--acc2),#7c5cff) border-box;border:1.5px solid transparent;border-radius:26px}
+.tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;margin:14px 14px 0;padding:4px;border-radius:16px;background:var(--field);border:1px solid var(--line)}
+.tabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:12px;background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 8px 18px -8px var(--acc2);transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
+.tabs[data-i="1"]::before{transform:translateX(100%)}
+.tabs button{position:relative;background:none!important;box-shadow:none!important;transform:none!important;padding:12px;font-size:15px}
+.tabs button[aria-selected=true]{color:#fff}
+.panel{padding:22px 20px 24px}
+.lbl{font-size:13px;color:var(--mute);letter-spacing:.01em;margin-bottom:10px}
+.lbl label{color:var(--ink);font-size:14px}
+.emojis{grid-template-columns:repeat(auto-fill,minmax(50px,1fr));gap:8px;max-height:200px;padding:6px 6px 12px;margin:0 -6px 18px;-webkit-mask-image:linear-gradient(#000 88%,transparent);mask-image:linear-gradient(#000 88%,transparent)}
+.emojis button{height:50px;font-size:26px;border-radius:15px}
+textarea{min-height:130px;border-radius:16px;font-size:16px;line-height:1.5}
+.row{margin-top:18px}
+.row .btn:first-child:last-child{width:100%}
+.btn{padding:14px 24px;font-size:16px;border-radius:15px}
+.out{position:relative;text-align:center;border-radius:20px;border:1.5px solid var(--line);background:linear-gradient(180deg,var(--field),transparent)}
+.out .row{justify-content:center}
+.out .big{font-size:60px}
+.out .meta{max-width:38ch;margin-left:auto;margin-right:auto}
+#decOut{text-align:left}
+#decMsg{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;padding:14px 18px;border-radius:20px 20px 20px 6px;display:inline-block;max-width:100%;box-shadow:0 12px 24px -12px var(--acc2)}
+#decMsg.err{background:none;color:#e0365f;padding:0;box-shadow:none}
+footer{margin-top:40px;border-top:0;padding-top:0}
+.social a{padding:11px 18px;box-shadow:0 4px 0 var(--line)}
+.social a:hover{box-shadow:0 6px 0 var(--line)}
+.btn.done{background:linear-gradient(90deg,#22c58b,#12a36f);box-shadow:0 6px 0 #0b7a54,0 14px 24px -8px #12a36f}
+@media (max-width:480px){.wrap{padding-left:14px;padding-right:14px}.panel{padding:18px 14px 20px}.orb{font-size:68px}}
+
+/* fix: no inner scrolling, page scrolls smoothly */
+.emojis{max-height:none!important;overflow:visible!important;-webkit-mask-image:none!important;mask-image:none!important;margin:0 0 10px!important;padding:4px 2px 8px!important;grid-template-columns:repeat(auto-fill,minmax(46px,1fr))!important}
+.emojis button{height:46px!important;font-size:24px!important}
+.emojis button[hidden]{display:none}
+.more{display:block;width:100%;margin:0 0 18px;padding:11px;border-radius:14px;border:1.5px dashed var(--line);background:none;color:var(--mute);font:inherit;font-weight:700;cursor:pointer;transition:.15s}
+.more:hover{color:var(--ink);border-color:var(--acc)}
+.card{will-change:auto}
+html{overscroll-behavior-y:auto}
+.bg{position:fixed;contain:strict}
+
+
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+        <div class="orb" id="orb" aria-hidden="true">😀</div>
+    <h1>Hide message <span class="grad">in emoji</span></h1>
+    <p class="by">Developed By Ashwin Verma</p>
+  </header>
+
+  <div class="card">
+    <div class="tabs" role="tablist">
+      <button role="tab" id="t1" aria-selected="true" aria-controls="p1">Hide message</button>
+      <button role="tab" id="t2" aria-selected="false" aria-controls="p2">Reveal message</button>
+    </div>
+
+    <section class="panel" id="p1" role="tabpanel" aria-labelledby="t1">
+      <div class="lbl">Choose an emoji</div>
+      <div class="emojis" id="picker"></div>
+      <div class="lbl"><label for="secret">Secret message</label><small id="count">0 characters</small></div>
+      <textarea id="secret" placeholder="Type the message you want to hide…"></textarea>
+      <div class="row"><button class="btn" id="enc">Generate emoji</button></div>
+      <div class="out" id="encOut" hidden>
+        <div class="big" id="encEmoji"></div>
+        <p class="meta" id="encMeta"></p>
+        <div class="row"><button class="btn" id="copy">Copy emoji</button></div>
+      </div>
+    </section>
+
+    <section class="panel" id="p2" role="tabpanel" aria-labelledby="t2" hidden>
+      <div class="lbl"><label for="cipher">Paste the emoji</label></div>
+      <textarea id="cipher" placeholder="Paste the emoji that contains a hidden message…"></textarea>
+      <div class="row"><button class="btn" id="dec">Reveal message</button><button class="btn ghost" id="paste">Paste from clipboard</button></div>
+      <div class="out" id="decOut" hidden><div class="msg" id="decMsg"></div><p class="meta" id="decMeta"></p></div>
+    </section>
+  </div>
+
+  <footer>
+    <div class="social">
+      <a href="https://t.me/AshwinVermaaa" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21.9 4.3 18.7 19.6c-.2 1-.9 1.3-1.7.8l-4.7-3.5-2.3 2.2c-.3.3-.5.5-1 .5l.3-4.8 8.7-7.9c.4-.3-.1-.5-.6-.2L6.6 13.5l-4.7-1.5c-1-.3-1-1 .2-1.5L20.400 3.4c.9-.3 1.600.2 1.500.9z"/></svg>Telegram: AshwinVermaaa</a>
+      <a href="https://instagram.com/ur.fav_ashwin" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm0 2a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3H7zm5 3.500a4.500 4.500 0 1 1 0 9 4.500 4.500 0 0 1 0-9zm0 2a2.500 2.500 0 1 0 0 5 2.500 2.500 0 0 0 0-5zm5.200-3.200a1.100 1.100 0 1 1 0 2.200 1.100 1.100 0 0 1 0-2.200z"/></svg>Instagram: ur.fav_ashwin</a>
+    </div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+<script>
+const $=id=>document.getElementById(id);
+const EM="😀 😂 🤣 😍 😎 🥰 😘 🤩 😜 🤪 🥳 😇 🤔 🤫 🥺 😭 😡 🤯 😱 🥶 🥵 😴 🤑 😈 👻 💀 👽 🤖 🎃 🔥 ✨ ⚡ 🌈 🌙 ⭐ 💎 🎉 🎁 🚀 👑 💖 ❤️ 💜 💯 👀 🙈 🐱 🐶 🦄 🐼 🍕 🍔 🍿 🎮 🎧 ⚽ 🏆 👍 🙏 🤝".split(" ");
+let pick=EM[0];
+const picker=$("picker");
+EM.forEach(e=>{const b=document.createElement("button");b.textContent=e;b.setAttribute("aria-label","Use emoji "+e);b.setAttribute("aria-pressed",e===pick);
+ b.onclick=()=>{pick=e;$("orb").textContent=e;[...picker.children].forEach(c=>c.setAttribute("aria-pressed",c===b))};picker.appendChild(b)});
+
+const toVS=b=>String.fromCodePoint(b<16?0xFE00+b:0xE0100+(b-16));
+const fromVS=cp=>cp>=0xFE00&&cp<=0xFE0F?cp-0xFE00:(cp>=0xE0100&&cp<=0xE01EF?cp-0xE0100+16:-1);
+const bytesOf=t=>[...new TextEncoder().encode(t)];
+function decode(s){const out=[];for(const ch of s){const v=fromVS(ch.codePointAt(0));if(v>=0)out.push(v)}return out}
+function toast(t){const el=$("toast");el.textContent=t;el.classList.add("on");setTimeout(()=>el.classList.remove("on"),1900)}
+
+$("secret").oninput=e=>{const n=[...e.target.value].length;$("count").textContent=n+(n===1?" character":" characters")};
+$("enc").onclick=()=>{
+  const t=$("secret").value;
+  if(!t.trim()){toast("Write a message first");return}
+  const b=bytesOf(t);
+  $("encEmoji").textContent=pick+b.map(toVS).join("");
+  $("encMeta").textContent="Visible: "+pick+" · Hidden inside: "+b.length+" bytes. Copy it and share.";
+  $("encOut").hidden=false;
+};
+$("copy").onclick=async()=>{
+  try{await navigator.clipboard.writeText($("encEmoji").textContent);toast("Copied to clipboard")}
+  catch(e){const r=document.createRange();r.selectNodeContents($("encEmoji"));const s=getSelection();s.removeAllRanges();s.addRange(r);toast("Selected. Press copy on your device.")}
+};
+function runDec(){
+  const b=decode($("cipher").value),o=$("decOut"),m=$("decMsg"),meta=$("decMeta");
+  o.hidden=false;m.className="msg";
+  if(!b.length){m.className="msg err";m.textContent="No hidden message found.";meta.textContent="Paste the full emoji. Some apps remove hidden characters.";return}
+  try{m.textContent=new TextDecoder("utf-8",{fatal:true}).decode(new Uint8Array(b));meta.textContent="Decoded "+b.length+" bytes."}
+  catch(e){m.className="msg err";m.textContent="The hidden message is incomplete or damaged.";meta.textContent="Some characters may have been lost while pasting."}
+}
+$("dec").onclick=runDec;
+$("paste").onclick=async()=>{try{$("cipher").value=await navigator.clipboard.readText();runDec()}catch(e){toast("Clipboard blocked. Paste manually.")}};
+const tabs=[["t1","p1"],["t2","p2"]];
+tabs.forEach(([t])=>$(t).onclick=()=>tabs.forEach(([a,p])=>{$(a).setAttribute("aria-selected",a===t);$(p).hidden=a!==t}));
+
+const reduce=matchMedia("(prefers-reduced-motion:reduce)").matches;
+if(!reduce){
+ const bg=document.createElement("div");bg.className="bg";bg.setAttribute("aria-hidden","true");
+ for(let i=0;i<16;i++){const sp=document.createElement("span");sp.textContent=EM[(i*7)%EM.length];
+  sp.style.left=(i*6.4+Math.random()*4)+"%";sp.style.fontSize=(22+Math.random()*34)+"px";
+  sp.style.animationDuration=(14+Math.random()*16)+"s";sp.style.animationDelay=(-Math.random()*24)+"s";bg.appendChild(sp)}
+ document.body.prepend(bg);
+ const card=document.querySelector(".card");
+ card.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const r=card.getBoundingClientRect();
+  const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+  card.classList.add("tilt");card.style.transform="perspective(1000px) rotateY("+(x*7)+"deg) rotateX("+(-y*7)+"deg)"});
+ card.addEventListener("pointerleave",()=>{card.classList.remove("tilt");card.style.transform=""});
+}
+const _o=$("orb");picker.addEventListener("click",()=>{_o.classList.remove("pop");void _o.offsetWidth;_o.classList.add("pop")});
+
+document.querySelector(".tabs").dataset.i=0;
+$("t1").addEventListener("click",()=>document.querySelector(".tabs").dataset.i=0);
+$("t2").addEventListener("click",()=>document.querySelector(".tabs").dataset.i=1);
+$("copy").addEventListener("click",()=>{const b=$("copy");b.textContent="Copied ✓";b.classList.add("done");setTimeout(()=>{b.textContent="Copy emoji";b.classList.remove("done")},1800)});
+
+const SHOW=14;
+const btns=[...picker.children];
+const more=document.createElement("button");more.type="button";more.className="more";
+let open=false;
+function fold(){btns.forEach((b,i)=>b.hidden=!open&&i>=SHOW);more.textContent=open?"Show fewer":"Show "+(btns.length-SHOW)+" more emojis"}
+more.onclick=()=>{open=!open;fold()};
+picker.after(more);fold();
+if("serviceWorker"in navigator&&location.protocol.startsWith("http")){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
+</script>
+</body>
+</html>
