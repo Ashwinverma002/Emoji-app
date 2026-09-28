@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#050816">
-<link rel="manifest" href="manifest.json">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-192.png">
 <title>Emoji Cipher – Hide messages inside emojis</title>
@@ -28,7 +27,7 @@ h1{font-size:clamp(32px,8vw,52px);line-height:1.05;letter-spacing:-.03em;margin:
 .by{color:var(--mute);font-weight:600;margin:0}.lead{color:var(--mute);max-width:54ch;margin:0 auto;font-size:17px}
 .card{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:8px}
 .tabs{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:4px}
-.tabs button{border:0;background:none;color:var(--mute);font:inherit;font-weight:700;padding:13px;border-radius:16px;cursor:pointer;transition:.2s}
+.tabs button{border:0;background:none;color:var(--mute);font:inherit;font-weight:700;padding:13px;border-radius:16px;cursor:pointer;transition:color .2s}
 .tabs button[aria-selected=true]{background:linear-gradient(90deg,var(--acc),var(--acc2));color:#fff;box-shadow:0 8px 20px -8px var(--acc2)}
 .panel{padding:18px 16px 18px}
 .panel[hidden]{display:none}
@@ -68,31 +67,30 @@ footer p{margin:0 0 12px;font-weight:600}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
 .hero{perspective:900px}
-.orb{transform-style:preserve-3d;animation:spin3d 7s ease-in-out infinite;text-shadow:1px 1px 0 #d98a1c,2px 2px 0 #c97d16,3px 3px 0 #b86f10,4px 4px 0 #a8620b,5px 5px 0 #985607,6px 12px 22px rgba(0,0,0,.35);filter:none;display:inline-block}
-@keyframes spin3d{0%,100%{transform:rotateY(-28deg) rotateX(8deg) translateY(0)}50%{transform:rotateY(28deg) rotateX(-6deg) translateY(-10px)}}
-.orb.pop{animation:popin .5s cubic-bezier(.2,1.6,.4,1),spin3d 7s ease-in-out .5s infinite}
+.orb{transform-style:preserve-3d;animation:spin3d 9s cubic-bezier(.45,0,.55,1) infinite;text-shadow:1px 1px 0 #d98a1c,2px 2px 0 #c97d16,3px 3px 0 #b86f10,4px 4px 0 #a8620b,5px 5px 0 #985607,6px 12px 22px rgba(0,0,0,.35);filter:none;display:inline-block}
+@keyframes spin3d{0%,100%{transform:rotateY(-20deg) rotateX(6deg) translateY(0)}50%{transform:rotateY(20deg) rotateX(-4deg) translateY(-8px)}}
+.orb.pop{animation:popin .6s cubic-bezier(.22,1,.36,1),spin3d 9s cubic-bezier(.45,0,.55,1) .6s infinite}
 @keyframes popin{from{transform:scale(.3) rotateY(180deg);opacity:0}to{transform:scale(1) rotateY(0);opacity:1}}
 .wrap{position:relative;z-index:1}
 .bg{position:fixed;inset:0;overflow:hidden;z-index:0;pointer-events:none;perspective:700px}
-.bg span{position:absolute;bottom:-60px;opacity:.28;animation:rise linear infinite;text-shadow:0 8px 14px rgba(0,0,0,.25)}
+.bg span{position:absolute;bottom:-60px;opacity:.28;animation:rise linear infinite;will-change:transform;text-shadow:0 8px 14px rgba(0,0,0,.25)}
 @keyframes rise{from{transform:translateY(0) translateZ(0) rotateY(0) rotateZ(-10deg)}to{transform:translateY(-115vh) translateZ(120px) rotateY(360deg) rotateZ(14deg)}}
-.card{transform-style:preserve-3d;transition:transform .25s ease-out,box-shadow .25s;will-change:transform}
-.card.tilt{transition:transform .05s linear}
-.panel:not([hidden]){animation:flip .45s cubic-bezier(.2,.9,.3,1)}
+.card{transform-style:preserve-3d;will-change:transform}
+.panel:not([hidden]){animation:flip .4s cubic-bezier(.22,1,.36,1)}
 @keyframes flip{from{opacity:0;transform:perspective(900px) rotateX(-14deg) translateY(10px)}to{opacity:1;transform:none}}
 .emojis{max-height:212px;overflow-y:auto;padding:6px 4px 10px;scrollbar-width:thin}
-.emojis button{box-shadow:0 4px 0 var(--line);transition:transform .15s,box-shadow .15s}
+.emojis button{box-shadow:0 4px 0 var(--line);transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s}
 .emojis button:hover{transform:translateY(-3px) scale(1.12) rotate(-4deg);box-shadow:0 8px 0 var(--line)}
 .emojis button:active{transform:translateY(2px);box-shadow:0 1px 0 var(--line)}
 .emojis button[aria-pressed=true]{transform:translateY(2px) scale(1.05);box-shadow:0 1px 0 var(--line),0 0 0 3px color-mix(in srgb,var(--acc) 35%,transparent)}
-.btn{box-shadow:0 6px 0 #c23a68,0 14px 24px -8px var(--acc2);transition:transform .12s,box-shadow .12s}
+.btn{box-shadow:0 6px 0 #c23a68,0 14px 24px -8px var(--acc2);transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s}
 .btn:hover{transform:translateY(-2px);box-shadow:0 8px 0 #c23a68,0 18px 28px -8px var(--acc2)}
 .btn:active{transform:translateY(5px);box-shadow:0 1px 0 #c23a68,0 4px 10px -4px var(--acc2)}
 .btn.ghost{box-shadow:0 4px 0 var(--line)}
 .btn.ghost:active{box-shadow:0 0 0 var(--line)}
 .tabs button[aria-selected=true]{transform:translateZ(20px)}
-.out:not([hidden]){animation:flip .5s cubic-bezier(.2,.9,.3,1)}
-.big{display:inline-block;animation:bob 3s ease-in-out infinite;text-shadow:2px 2px 0 #d98a1c,4px 4px 0 #b86f10,6px 10px 16px rgba(0,0,0,.3)}
+.out:not([hidden]){animation:flip .4s cubic-bezier(.22,1,.36,1)}
+.big{display:inline-block;animation:bob 3.4s cubic-bezier(.45,0,.55,1) infinite;text-shadow:2px 2px 0 #d98a1c,4px 4px 0 #b86f10,6px 10px 16px rgba(0,0,0,.3)}
 @keyframes bob{50%{transform:rotateY(18deg) translateY(-4px)}}
 
 /* polish pass */
@@ -106,7 +104,7 @@ h1{font-size:clamp(30px,7.5vw,46px);margin:4px 0 8px}
 .bg span{opacity:.16}
 .card{padding:0;border:0;background:linear-gradient(var(--card),var(--card)) padding-box,linear-gradient(135deg,var(--acc),var(--acc2),#7c5cff) border-box;border:1.5px solid transparent;border-radius:26px}
 .tabs{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:0;margin:14px 14px 0;padding:4px;border-radius:16px;background:var(--field);border:1px solid var(--line)}
-.tabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:12px;background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 8px 18px -8px var(--acc2);transition:transform .35s cubic-bezier(.3,1.3,.5,1)}
+.tabs::before{content:"";position:absolute;top:4px;bottom:4px;left:4px;width:calc(50% - 4px);border-radius:12px;background:linear-gradient(90deg,var(--acc),var(--acc2));box-shadow:0 8px 18px -8px var(--acc2);transition:transform .4s cubic-bezier(.22,1,.36,1)}
 .tabs[data-i="1"]::before{transform:translateX(100%)}
 .tabs button{position:relative;background:none!important;box-shadow:none!important;transform:none!important;padding:12px;font-size:15px}
 .tabs button[aria-selected=true]{color:#fff}
@@ -143,9 +141,14 @@ html{overscroll-behavior-y:auto}
 .bg{position:fixed;contain:strict}
 
 
+
+.dlbar{display:flex;justify-content:flex-end;max-width:760px;margin:0 auto;padding:16px 18px 0}
+.dlbtn{display:inline-flex;align-items:center;gap:6px;text-decoration:none;color:#fff;font-size:13px;font-weight:700;background:linear-gradient(90deg,var(--acc),var(--acc2));padding:9px 15px;border-radius:999px;box-shadow:0 8px 18px -8px var(--acc2);border:1px solid rgba(255,255,255,.25);transition:transform .18s cubic-bezier(.22,1,.36,1),box-shadow .18s}
+.dlbtn:active{transform:translateY(2px)}
 </style>
 </head>
 <body>
+<div class="dlbar"><a class="dlbtn" href="download.html">⬇ Download App</a></div>
 <div class="wrap">
   <header class="hero">
         <div class="orb" id="orb" aria-hidden="true">😀</div>
@@ -235,10 +238,12 @@ if(!reduce){
   sp.style.animationDuration=(14+Math.random()*16)+"s";sp.style.animationDelay=(-Math.random()*24)+"s";bg.appendChild(sp)}
  document.body.prepend(bg);
  const card=document.querySelector(".card");
+ let tx=0,ty=0,cx=0,cy=0,raf=null;
+ function loop(){cx+=(tx-cx)*.12;cy+=(ty-cy)*.12;card.style.transform="perspective(1000px) rotateY("+cx+"deg) rotateX("+cy+"deg)";if(Math.abs(tx-cx)>.01||Math.abs(ty-cy)>.01){raf=requestAnimationFrame(loop)}else{raf=null}}
  card.addEventListener("pointermove",e=>{if(e.pointerType!=="mouse")return;const r=card.getBoundingClientRect();
   const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
-  card.classList.add("tilt");card.style.transform="perspective(1000px) rotateY("+(x*7)+"deg) rotateX("+(-y*7)+"deg)"});
- card.addEventListener("pointerleave",()=>{card.classList.remove("tilt");card.style.transform=""});
+  tx=x*6;ty=-y*6;if(!raf)raf=requestAnimationFrame(loop)});
+ card.addEventListener("pointerleave",()=>{tx=0;ty=0;if(!raf)raf=requestAnimationFrame(loop)});
 }
 const _o=$("orb");picker.addEventListener("click",()=>{_o.classList.remove("pop");void _o.offsetWidth;_o.classList.add("pop")});
 
@@ -254,7 +259,6 @@ let open=false;
 function fold(){btns.forEach((b,i)=>b.hidden=!open&&i>=SHOW);more.textContent=open?"Show fewer":"Show "+(btns.length-SHOW)+" more emojis"}
 more.onclick=()=>{open=!open;fold()};
 picker.after(more);fold();
-if("serviceWorker"in navigator&&location.protocol.startsWith("http")){addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}))}
 </script>
 </body>
 </html>
